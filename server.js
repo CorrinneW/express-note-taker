@@ -13,9 +13,12 @@ const generateUniqueId = require('generate-unique-id');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+app.use(express.static("public"));
+app.use(express.json());
+
+//global array to store notes
 let notes = [];
 
-app.use(express.static("public"));
 //Routes
 
 //routes user to home page and notes page
@@ -33,9 +36,8 @@ app.post('/api/notes', (req, res) => {
         length: 8,
         useLetters: false
     });
-    //newNote is set to the user-typed note
-    console.log(req.body);
 
+    //reads user note, converts to json, pushes to notes array and writes to db.json
     fs.readFile(db, 'utf-8', function(err, data) {
         if(err) throw err;
         notes = JSON.parse(data);
@@ -45,7 +47,9 @@ app.post('/api/notes', (req, res) => {
             if (err) throw err
             console.log('Done!');
         })
-    }) 
+    });
+    
+    
 
 })
 
