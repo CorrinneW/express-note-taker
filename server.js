@@ -11,7 +11,9 @@ const generateUniqueId = require('generate-unique-id');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, 'public')));
+
+//handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -23,13 +25,17 @@ let notes = [];
 //Routes
 
 //routes user to home page and notes page
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, './public/index.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 
-app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')));
+app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public/notes.html')));
 
 //gets existing notes
-app.get('/api/notes', (req, res) => res.json(db));
-
+app.get('/api/notes', (req, res) => fs.readFile(db, 'utf-8', function(err, data) {
+    if(err) throw err;
+    let parsedData = JSON.parse(data);
+    res.json(parsedData);
+    console.log(parsedData);
+}));
 //saves new note
 app.post('/api/notes', (req, res) => {
     //gives each note the user creates a unique 8 number ID
@@ -38,11 +44,15 @@ app.post('/api/notes', (req, res) => {
         useLetters: false
     });
 
+    const newNote = req.body;
+
+    newNote.id = newId;
+
     //reads user note, converts to json, pushes to notes array and writes to db.json
     fs.readFile(db, 'utf-8', function(err, data) {
         if(err) throw err;
         notes = JSON.parse(data);
-        notes.push(req.body);
+        notes.push(newNote);
 
         fs.writeFile(db, JSON.stringify(notes), 'utf-8', function(err) {
             if (err) throw err
@@ -51,7 +61,12 @@ app.post('/api/notes', (req, res) => {
     });
 })
 
-//
+//delete a note
+app.delete('api/notes', (req, res) => {
+    const selectedNote = req.body;
+
+    
+})
 
 // Starts the server to begin listening
 app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
