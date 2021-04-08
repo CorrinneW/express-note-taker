@@ -1,7 +1,6 @@
 // Dependencies
 
 const fs = require('fs');
-const db = './db/db.json';
 const express = require('express');
 const path = require('path');
 
@@ -9,12 +8,14 @@ const path = require('path');
 const generateUniqueId = require('generate-unique-id');
 
 // Sets up the Express App
-
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+const db = './db/db.json';
 
 //global array to store notes
 let notes = [];
@@ -27,7 +28,7 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, './public/index.htm
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')));
 
 //gets existing notes
-app.get('/api/notes', (req, res) => res.sendFile(path.join(__dirname, "./db/db.json")));
+app.get('/api/notes', (req, res) => res.json(db));
 
 //saves new note
 app.post('/api/notes', (req, res) => {
@@ -48,11 +49,9 @@ app.post('/api/notes', (req, res) => {
             console.log('Done!');
         })
     });
-    
-    
-
 })
 
-// Starts the server to begin listening
+//
 
+// Starts the server to begin listening
 app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
