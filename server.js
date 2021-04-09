@@ -68,7 +68,8 @@ app.delete('/api/notes/:id', (req, res) => {
     fs.readFile(db, 'utf-8', function(err, data) {
         if(err) throw err
         notes = JSON.parse(data);
-        let index = notes.indexOf(req.params.id);
+        let index = notes.indexOf(req.params);
+        console.log(index);
         notes.splice(index, 1)
 
         fs.writeFile(db, JSON.stringify(notes), 'utf-8', function(err) {
