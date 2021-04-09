@@ -34,7 +34,7 @@ app.get('/api/notes', (req, res) => fs.readFile(db, 'utf-8', function(err, data)
     if(err) throw err;
     let parsedData = JSON.parse(data);
     res.json(parsedData);
-    console.log(parsedData);
+    // console.log(parsedData);
 }));
 //saves new note
 app.post('/api/notes', (req, res) => {
@@ -56,17 +56,28 @@ app.post('/api/notes', (req, res) => {
 
         fs.writeFile(db, JSON.stringify(notes), 'utf-8', function(err) {
             if (err) throw err
-            console.log('Done!');
         })
     });
+
+    res.redirect('/');
 })
 
 //delete a note
-app.delete('api/notes', (req, res) => {
-    const selectedNote = req.body;
+app.delete('/api/notes/:id', (req, res) => {
 
-    
-})
+    fs.readFile(db, 'utf-8', function(err, data) {
+        if(err) throw err
+        notes = JSON.parse(data);
+        let index = notes.indexOf(req.params.id);
+        notes.splice(index, 1)
+
+        fs.writeFile(db, JSON.stringify(notes), 'utf-8', function(err) {
+            if (err) throw err
+            console.log(`Deleted note #${req.params.id}`)
+        });
+    });
+    res.redirect('/');
+});
 
 // Starts the server to begin listening
 app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
