@@ -10,6 +10,4 @@ An interactive app that allows the user to write and save notes to a JSON databa
 3. Used GET and POST requests to retrieve and display existing note data, as well as write new data to db.json.
 4. Used a DELETE request to allow user to remove notes.
 
-![note-taker.png] (https://github.com/CorrinneW/express-note-taker/blob/main/public/assets/images/Note-Taker.png)
-
-
+![note-taker.png](/public/assets/images/Note-Taker.png)
