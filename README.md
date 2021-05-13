@@ -14,3 +14,9 @@ An interactive app that allows the user to write and save notes to a JSON databa
 https://damp-falls-43056.herokuapp.com/
 
 ![note-taker.png](/public/assets/images/Note-Taker.png)
+
+
+## License
+
+MIT License
+![test](https://img.shields.io/apm/l/test)
